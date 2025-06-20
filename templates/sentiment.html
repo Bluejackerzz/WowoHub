@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>WowoHub</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/sentiment">Sentiment Analysis</a></li>
+                <li><a href="/about">About</a></li>
+
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Sentiment Analysis</h2>
+                <p>Analyze the sentiment of your text input.</p>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="hero-content">
+                <h3 style="text-align: center;">Analyze Text</h3>
+                <form method="POST" action="/sentiment">
+                    <textarea id="userText" name="text" rows="4" cols="50" placeholder="Enter your text here"></textarea><br>
+                    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                        <button type="submit">Analyze Text</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </section>
+
+        {% if percentages and results %}
+        <section class="results-section" style="display: flex; justify-content: center; margin-bottom: 20px;">
+            <div class="hero-content">
+                <h3>Analysis Results</h3>
+                <div>
+                    <h4>Sentiment Percentages</h4>
+                    <ul>
+                        {% for label, percentage in percentages.items() %}
+                            <li>{{ label }}: {{ percentage|round(2) }}%</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h4>Detailed Results</h4>
+                    <ul>
+                        {% for result in results %}
+                            <li>{{ result['label'] }} - {{ result['score']|round(2) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 WowoHub | All Rights Reserved</p>
+        </div>
+    </footer>
+</body>
+</html>

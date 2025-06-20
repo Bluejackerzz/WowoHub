@@ -1,0 +1,161 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f0f4f8;
+    color: #333;
+}
+
+/* Header and Navbar Styling */
+header {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+nav .logo h1 {
+    font-size: 24px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: background-color 0.3s;
+}
+
+.nav-links a:hover {
+    background-color: #ff9f00;
+    border-radius: 5px;
+}
+
+/* Hero Section Styling */
+.hero {
+    height: 80vh;
+    background:no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    text-align: center;
+}
+
+.hero-content h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.hero-content p {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Modern Text Input Field Styling */
+#userText {
+    padding: 12px 20px;  /* Increased padding for a more spacious feel */
+    font-size: 16px;      /* Improved font size for readability */
+    border-radius: 25px;  /* Rounded corners for a modern look */
+    border: 1px solid #ccc;  /* Light border color */
+    width: 80%;  /* Make input field wider */
+    max-width: 600px;  /* Ensure it doesn't get too wide on large screens */
+    margin-bottom: 20px;  /* Space below the input field */
+    transition: all 0.3s ease;  /* Smooth transition for interactive effects */
+}
+
+/* Focus effect for the text input field */
+#userText:focus {
+    border-color: #ff9f00;  /* Change border color when focused */
+    outline: none;          /* Remove default outline */
+    box-shadow: 0 0 10px rgba(255, 159, 0, 0.5);  /* Add subtle glow effect */
+}
+
+/* Modern button styling */
+.hero-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #ff9f00;
+    border: none;
+    border-radius: 25px;  /* Match button style with the input field */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;  /* Add smooth hover effects */
+}
+
+.hero-content button:hover {
+    background-color: #e08700;
+    transform: scale(1.05);  /* Slightly increase button size on hover */
+}
+
+/* Footer Styling */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-content p {
+    font-size: 14px;
+}
+
+/* Page fade transition */
+body {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* For smooth fade-in when page loads */
+body.fade-out {
+    opacity: 0;
+}
+
+
+/* Fade-up animation for hero content on the About page */
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply fade-up animation to the About Us page */
+.hero-content {
+    animation: fadeUp 1.5s ease-out;
+    animation-fill-mode: forwards;  /* Keep the final state after animation */
+}
+
+/* Textarea adjustment */
+#userText {
+    display: block;
+    margin: 50px auto; /* Memusatkan textarea */
+}

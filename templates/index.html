@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>AI Website</title>
+    <!-- Add Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>WowoHub</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/sentiment">Sentiment Analysis</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>AI Political Leaning Prediction</h2>
+                <p>Enter a comment, and our AI will predict its political leaning.</p>
+                <input type="text" id="userText" placeholder="Enter a comment" />
+                <button id="predictButton">Predict</button>
+
+                <div id="predictionResult" style="display:none;">
+                    <h3>Prediction Results</h3>
+                    <canvas id="predictionChart" width="400" height="200"></canvas>  <!-- Bar chart will appear here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 WowoHub | All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get elements
+        const predictButton = document.getElementById('predictButton');
+        const userText = document.getElementById('userText');
+        const predictionResult = document.getElementById('predictionResult');
+        const chartCanvas = document.getElementById('predictionChart');
+        let chartInstance = null; // Keep track of the chart instance
+
+        // Event listener for the button click
+        predictButton.addEventListener('click', async () => {
+            const text = userText.value;
+
+            // Check if input is not empty
+            if (text.trim() === '') {
+                alert("Please enter some text!");
+                return;
+            }
+
+            // Send request to Flask API
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text })
+            });
+
+            // Get response and display results
+            const data = await response.json();
+            const probabilities = data.probabilities;
+            const labels = data.labels;
+
+            // Get top 3 predictions
+            const topPredictions = probabilities
+                .map((prob, index) => ({ label: labels[index], probability: prob }))
+                .sort((a, b) => b.probability - a.probability) // Sort by highest probability
+                .slice(0, 3); // Get the top 3 predictions
+
+            // Prepare data for the chart
+            const chartData = {
+                labels: topPredictions.map(p => p.label), // Top 3 labels
+                datasets: [{
+                    label: 'Political Leaning',
+                    data: topPredictions.map(p => p.probability * 100), // Convert probabilities to percentage
+                    backgroundColor: ['#ff9f00', '#00bfff', '#32cd32'], // Colors for bars
+                    borderColor: ['#ff7f00', '#0080ff', '#228b22'],  // Darker border colors
+                    borderWidth: 1
+                }]
+            };
+
+            // Clear the canvas to avoid overlapping charts
+            const ctx = chartCanvas.getContext('2d');
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear previous chart
+
+            // If a chart instance already exists, destroy it to create a new one
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            // Create the new chart with plugin to display text on top of bars
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100, // Ensure max value is 100
+                            ticks: {
+                                stepSize: 10
+                            }
+                        }
+                    },
+                    plugins: {
+                        // Custom plugin to display labels on the bars
+                        tooltip: {
+                            enabled: false // Disable tooltips since we will display the label on bars
+                        },
+                        datalabels: {
+                            display: true,
+                            align: 'end',
+                            formatter: (value, context) => {
+                                const label = context.chart.data.labels[context.dataIndex];
+                                const percentage = value.toFixed(2) + '%';
+                                return `${label}\n${percentage}`; // Show both label and percentage
+                            },
+                            color: '#fff', // White color for text
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            padding: 5
+                        }
+                    }
+                }
+            });
+
+            // Show the prediction result after chart is created
+            predictionResult.style.display = 'block';
+
+            // Reset the input field for the next input
+            userText.value = '';
+        });
+    </script>
+</body>
+</html>
